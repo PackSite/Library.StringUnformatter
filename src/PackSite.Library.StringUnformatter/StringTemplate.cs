@@ -35,12 +35,12 @@
         /// </summary>
         public static StringTemplate Parse(string template)
         {
-            (bool HasParameters, List<StringTemplatePart> Parameters) parsed = ParseTemplate(template);
+            (bool HasParameters, List<StringTemplatePart> Parts) parsed = ParseTemplate(template);
 
-            return new StringTemplate(template, parsed.Parameters, parsed.HasParameters);
+            return new StringTemplate(template, parsed.Parts, parsed.HasParameters);
         }
 
-        private static (bool HasParameters, List<StringTemplatePart> Parameters) ParseTemplate(string template)
+        private static (bool HasParameters, List<StringTemplatePart> Parts) ParseTemplate(string template)
         {
             if (string.IsNullOrWhiteSpace(template))
             {
