@@ -19,9 +19,14 @@ jobs:
       uses: actions/setup-dotnet@v1.7.2
       with:
         dotnet-version: 5.0.x
-
+        source-url: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+      env:
+        NUGET_AUTH_TOKEN: '%NUGET_AUTH_TOKEN%'
+        
     - name: Pack
       run: dotnet pack src/PackSite.Library.StringUnformatter.sln --configuration Release
-
-    - name: Deploy
-      run: dotnet nuget push src/PackSite.Library.StringUnformatter/bin/Release/*.nupkg -s github -k ${{ secrets.GITHUB_TOKEN }}
+     
+    - name: Deploy to GitHub Package Registry
+      run: dotnet nuget push src/PackSite.Library.StringUnformatter/bin/Release/*.nupkg
+      env:
+        NUGET_AUTH_TOKEN: ${{ github.token }}
