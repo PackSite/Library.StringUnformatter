@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    tags-ignore:
+      - '*'
+    paths-ignore:
+      - LICENSE
+      - 'CHANGELOG.md'
+      - 'README.md'
+  pull_request:
+    tags-ignore:
+      - '*'
+    paths-ignore:
+      - LICENSE
+      - 'CHANGELOG.md'
+      - 'README.md'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2.3.3
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v1.7.2
+      with:
+        dotnet-version: '5.0.x'
+
+    - name: Build & test
+      run: dotnet test src/PackSite.Library.StringUnformatter.sln --configuration Release
+
+    - name: Upload coverage
+      uses: codecov/codecov-action@v1.0.14
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./src/PackSite.Library.StringUnformatter.Tests/bin/Release/Coverage.xml

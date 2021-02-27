@@ -7,10 +7,12 @@
     /// </summary>
     public readonly struct StringTemplatePart : IEquatable<StringTemplatePart>
     {
+        private readonly string? _value;
+
         /// <summary>
         /// String template part value
         /// </summary>
-        public string Value { get; }
+        public string Value => _value ?? string.Empty;
 
         /// <summary>
         /// Whether value is parameter
@@ -22,12 +24,7 @@
         /// </summary>
         public StringTemplatePart(string value, bool isParameter = false)
         {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                throw new ArgumentException($"'{nameof(value)}' cannot be null or whitespace", nameof(value));
-            }
-
-            Value = value;
+            _value = value;
             IsParameter = isParameter;
         }
 
@@ -47,7 +44,7 @@
         /// <summary>
         /// Determines whether two specified string template parts have the same value.
         /// </summary>
-        public static bool operator ==(StringTemplatePart left, StringTemplatePart right)
+        public static bool operator ==(in StringTemplatePart left, in StringTemplatePart right)
         {
             return left.Equals(right);
         }
@@ -55,19 +52,19 @@
         /// <summary>
         /// Determines whether two specified string template parts have different values.
         /// </summary>
-        public static bool operator !=(StringTemplatePart left, StringTemplatePart right)
+        public static bool operator !=(in StringTemplatePart left, in StringTemplatePart right)
         {
             return !(left == right);
         }
 
         /// <inheritdoc/>
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return HashCode.Combine(Value, IsParameter);
         }
 
         /// <inheritdoc/>
-        public override string? ToString()
+        public override readonly string? ToString()
         {
             return IsParameter ? $"PARAM: \"{{{Value}}}\"" : $"VALUE: \"{Value}\"";
         }
