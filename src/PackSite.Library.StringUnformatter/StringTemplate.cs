@@ -2,11 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// String template object.
     /// </summary>
-    public class StringTemplate
+    public class StringTemplate : IEquatable<StringTemplate>
     {
         /// <summary>
         /// Template definition.
@@ -38,6 +40,16 @@
             (bool HasParameters, List<StringTemplatePart> Parts) parsed = ParseTemplate(template);
 
             return new StringTemplate(template, parsed.Parts, parsed.HasParameters);
+        }
+
+        /// <summary>
+        /// Parse template from string.
+        /// </summary>
+        public static StringTemplate FromParts(IReadOnlyList<StringTemplatePart> parts)
+        {
+            string template =  StringTemplatePart.Join(parts);
+
+            return new StringTemplate(template, parts, parts.Where(x => x.IsParameter).Any());
         }
 
         private static (bool HasParameters, List<StringTemplatePart> Parts) ParseTemplate(string template)
@@ -192,6 +204,49 @@
             }
 
             return boundedValues;
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object? obj)
+        {
+            return obj is StringTemplate st && Equals(st);
+        }
+
+        /// <inheritdoc/>
+        public bool Equals(StringTemplate? other)
+        {
+            return other is not null &&
+                other.HasParameters == HasParameters &&
+                other.Parts.Count == Parts.Count &&
+                other.Template == Template; ;
+        }
+
+        /// <summary>
+        /// Determines whether two specified string templates have the same value.
+        /// </summary>
+        public static bool operator ==(in StringTemplate left, in StringTemplate right)
+        {
+            return left.Equals(right);
+        }
+
+        /// <summary>
+        /// Determines whether two specified string templates have different values.
+        /// </summary>
+        public static bool operator !=(in StringTemplate left, in StringTemplate right)
+        {
+            return !(left == right);
+        }
+
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Template, HasParameters);
+        }
+        /// <inheritdoc/>
+        public override string? ToString()
+        {
+            return Template;
         }
     }
 }

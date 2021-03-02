@@ -1,6 +1,8 @@
 ﻿namespace PackSite.Library.StringUnformatter
 {
     using System;
+    using System.Collections.Generic;
+    using System.Text;
 
     /// <summary>
     /// String template part
@@ -26,6 +28,38 @@
         {
             _value = value;
             IsParameter = isParameter;
+        }
+
+        /// <summary>
+        /// Joins parts to string.
+        /// </summary>
+        public static string Join(params StringTemplatePart[] parts)
+        {
+            return Join((IEnumerable<StringTemplatePart>)parts);
+        }
+
+        /// <summary>
+        /// Joins parts to string.
+        /// </summary>
+        public static string Join(IEnumerable<StringTemplatePart> parts)
+        {
+            StringBuilder stringBuilder = new();
+
+            foreach (StringTemplatePart part in parts)
+            {
+                if (part.IsParameter)
+                {
+                    stringBuilder.Append('{');
+                    stringBuilder.Append(part.Value);
+                    stringBuilder.Append('}');
+                }
+                else
+                {
+                    stringBuilder.Append(part.Value);
+                }
+            }
+
+            return stringBuilder.ToString();
         }
 
         /// <inheritdoc/>

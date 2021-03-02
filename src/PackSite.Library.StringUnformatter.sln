@@ -24,6 +24,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configurat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BC681B91-571A-4D8A-8254-1B2177D6ABCD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{F27D31BE-AE10-4682-B458-5F802E2DF3D9}"
+	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\CD.yml = ..\.github\workflows\CD.yml
+		..\.github\workflows\CI.yml = ..\.github\workflows\CI.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +71,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{AD087126-7663-491F-9B49-0D9C75B0EA75} = {DE385242-79E5-41FC-848F-DEE32A2C84F5}
 		{E998B2DC-FD84-44D5-A47E-1FE76664810C} = {BC681B91-571A-4D8A-8254-1B2177D6ABCD}
+		{F27D31BE-AE10-4682-B458-5F802E2DF3D9} = {925881C4-1646-44BE-825A-3A8A967B46F6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4F64AEA3-F0DE-457E-9486-BC5B7DEAC07B}

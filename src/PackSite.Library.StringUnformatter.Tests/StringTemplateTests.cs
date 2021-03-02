@@ -21,6 +21,21 @@ namespace PackSite.Library.StringUnformatter.Tests
         }
 
         [Fact]
+        public void Should_create_from_parts()
+        {
+            StringTemplate template = StringTemplate.FromParts(new StringTemplatePart[]
+            {
+                new("category/delete/"),
+                new("Id", true),
+                new("/QWErty")
+            });
+
+            StringTemplate otherTemplate = StringTemplate.Parse("category/delete/{Id}/QWErty");
+            template.Template.Should().Be("category/delete/{Id}/QWErty");
+            template.Should().Equals(otherTemplate);
+        }
+
+        [Fact]
         public void Should_parse_when_ending_with_parameter()
         {
             StringTemplate template = StringTemplate.Parse("category/delete/{Id}/{Value}");
@@ -172,6 +187,28 @@ namespace PackSite.Library.StringUnformatter.Tests
                 { "Id", "00-000" },
                 { "Value", "test" }
             });
+        }
+
+        [Fact]
+        public void Should_be_comparable()
+        {
+            StringTemplate template = StringTemplate.FromParts(new StringTemplatePart[]
+            {
+                new("category/delete/this/"),
+                new("Id", true),
+                new("/QWErty")
+            });
+
+            StringTemplate otherTemplate = StringTemplate.Parse("category/delete/this/{Id}/QWErty");
+            StringTemplate otherWrongTemplate = StringTemplate.Parse("category/delete/this/{Id}/WErty");
+
+            (template == otherTemplate).Should().BeTrue();
+            (template != otherTemplate).Should().BeFalse();
+            template.Equals(otherTemplate).Should().BeTrue();
+
+            (template == otherWrongTemplate).Should().BeFalse();
+            (template != otherWrongTemplate).Should().BeTrue();
+            template.Equals(otherWrongTemplate).Should().BeFalse();
         }
     }
 }
