@@ -22,9 +22,9 @@ jobs:
         source-url: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
       env:
         NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        
+
     - name: Pack
       run: dotnet pack src/PackSite.Library.StringUnformatter.sln --configuration Release
-     
+
     - name: Deploy to GitHub Package Registry
       run: dotnet nuget push src/PackSite.Library.StringUnformatter/bin/Release/*.nupkg -k ${{ secrets.GITHUB_TOKEN }}
