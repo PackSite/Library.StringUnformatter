@@ -2,8 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// String template object.
@@ -47,7 +47,7 @@
         /// </summary>
         public static StringTemplate FromParts(IReadOnlyList<StringTemplatePart> parts)
         {
-            string template =  StringTemplatePart.Join(parts);
+            string template = StringTemplatePart.Join(parts);
 
             return new StringTemplate(template, parts, parts.Where(x => x.IsParameter).Any());
         }
@@ -237,13 +237,15 @@
             return !(left == right);
         }
 
-
         /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
         public override int GetHashCode()
         {
             return HashCode.Combine(Template, HasParameters);
         }
+
         /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
         public override string? ToString()
         {
             return Template;

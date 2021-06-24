@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
     /// <summary>
@@ -33,6 +34,7 @@
         /// <summary>
         /// Joins parts to string.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static string Join(params StringTemplatePart[] parts)
         {
             return Join((IEnumerable<StringTemplatePart>)parts);
@@ -92,12 +94,14 @@
         }
 
         /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
         public override readonly int GetHashCode()
         {
             return HashCode.Combine(Value, IsParameter);
         }
 
         /// <inheritdoc/>
+        [ExcludeFromCodeCoverage]
         public override readonly string? ToString()
         {
             return IsParameter ? $"PARAM: \"{{{Value}}}\"" : $"VALUE: \"{Value}\"";
