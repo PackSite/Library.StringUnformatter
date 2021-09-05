@@ -8,14 +8,12 @@
     /// <summary>
     /// String template part
     /// </summary>
-    public readonly struct StringTemplatePart : IEquatable<StringTemplatePart>
+    public sealed class StringTemplatePart : IEquatable<StringTemplatePart>
     {
-        private readonly string? _value;
-
         /// <summary>
         /// String template part value
         /// </summary>
-        public string Value => _value ?? string.Empty;
+        public string Value { get; }
 
         /// <summary>
         /// Whether value is parameter
@@ -27,14 +25,14 @@
         /// </summary>
         public StringTemplatePart(string value, bool isParameter = false)
         {
-            _value = value;
+            Value = value ?? string.Empty;
             IsParameter = isParameter;
         }
 
         /// <summary>
         /// Joins parts to string.
         /// </summary>
-        [ExcludeFromCodeCoverage]
+        /// <param name="parts"></param>
         public static string Join(params StringTemplatePart[] parts)
         {
             return Join((IEnumerable<StringTemplatePart>)parts);
@@ -43,6 +41,7 @@
         /// <summary>
         /// Joins parts to string.
         /// </summary>
+        /// <param name="parts"></param>
         public static string Join(IEnumerable<StringTemplatePart> parts)
         {
             StringBuilder stringBuilder = new();
@@ -64,6 +63,36 @@
             return stringBuilder.ToString();
         }
 
+        /// <summary>
+        /// Joins parts to string.
+        /// </summary>
+        /// <param name="parts"></param>
+        /// <param name="parametersCount"></param>
+        public static string Join(IEnumerable<StringTemplatePart> parts, out int parametersCount)
+        {
+            parametersCount = 0;
+
+            StringBuilder stringBuilder = new();
+
+            foreach (StringTemplatePart part in parts)
+            {
+                if (part.IsParameter)
+                {
+                    stringBuilder.Append('{');
+                    stringBuilder.Append(part.Value);
+                    stringBuilder.Append('}');
+
+                    ++parametersCount;
+                }
+                else
+                {
+                    stringBuilder.Append(part.Value);
+                }
+            }
+
+            return stringBuilder.ToString();
+        }
+
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
@@ -71,14 +100,15 @@
         }
 
         /// <inheritdoc/>
-        public bool Equals(StringTemplatePart other)
+        public bool Equals(StringTemplatePart? other)
         {
-            return Value == other.Value &&
+            return other is not null &&
+                   Value == other.Value &&
                    IsParameter == other.IsParameter;
         }
 
         /// <summary>
-        /// Determines whether two specified string template parts have the same value.
+        /// Determines whether two specified <see cref="StringTemplatePart"/> have the same value.
         /// </summary>
         public static bool operator ==(in StringTemplatePart left, in StringTemplatePart right)
         {
@@ -86,7 +116,7 @@
         }
 
         /// <summary>
-        /// Determines whether two specified string template parts have different values.
+        /// Determines whether two specified <see cref="StringTemplatePart"/> have different values.
         /// </summary>
         public static bool operator !=(in StringTemplatePart left, in StringTemplatePart right)
         {
@@ -95,14 +125,14 @@
 
         /// <inheritdoc/>
         [ExcludeFromCodeCoverage]
-        public override readonly int GetHashCode()
+        public override int GetHashCode()
         {
             return HashCode.Combine(Value, IsParameter);
         }
 
         /// <inheritdoc/>
         [ExcludeFromCodeCoverage]
-        public override readonly string? ToString()
+        public override string? ToString()
         {
             return IsParameter ? $"PARAM: \"{{{Value}}}\"" : $"VALUE: \"{Value}\"";
         }

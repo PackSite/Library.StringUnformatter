@@ -3,12 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
 
     /// <summary>
     /// String template object.
     /// </summary>
-    public class StringTemplate : IEquatable<StringTemplate>
+    public sealed class StringTemplate : IEquatable<StringTemplate>
     {
         /// <summary>
         /// Template definition.
@@ -23,23 +22,24 @@
         /// <summary>
         /// Whether template has any parameters.
         /// </summary>
-        public bool HasParameters { get; private set; }
+        public bool HasParameters => ParmetersCount > 0;
 
-        private StringTemplate(string template, IReadOnlyList<StringTemplatePart> parts, bool hasParameters)
+        /// <summary>
+        /// Number of parmeters in the template.
+        /// </summary>
+        public int ParmetersCount { get; }
+
+        /// <summary>
+        /// Initializes an instance of <see cref="StringTemplate"/>.
+        /// </summary>
+        /// <param name="template"></param>
+        /// <param name="parts"></param>
+        /// <param name="parmetersCount"></param>
+        private StringTemplate(string template, IReadOnlyList<StringTemplatePart> parts, int parmetersCount)
         {
             Template = template;
             Parts = parts;
-            HasParameters = hasParameters;
-        }
-
-        /// <summary>
-        /// Parse template from string.
-        /// </summary>
-        public static StringTemplate Parse(string template)
-        {
-            (bool HasParameters, List<StringTemplatePart> Parts) parsed = ParseTemplate(template);
-
-            return new StringTemplate(template, parsed.Parts, parsed.HasParameters);
+            ParmetersCount = parmetersCount;
         }
 
         /// <summary>
@@ -47,12 +47,17 @@
         /// </summary>
         public static StringTemplate FromParts(IReadOnlyList<StringTemplatePart> parts)
         {
-            string template = StringTemplatePart.Join(parts);
+            string template = StringTemplatePart.Join(parts, out int parametersCount);
 
-            return new StringTemplate(template, parts, parts.Where(x => x.IsParameter).Any());
+            return new StringTemplate(template, parts, parametersCount);
         }
 
-        private static (bool HasParameters, List<StringTemplatePart> Parts) ParseTemplate(string template)
+        /// <summary>
+        /// Parse template from string.
+        /// </summary>
+        /// <exception cref="ArgumentException">Throws when template is null or whitespace.</exception>
+        /// <exception cref="FormatException">Throws when template format is invalid.</exception>
+        public static StringTemplate Parse(string template)
         {
             if (string.IsNullOrWhiteSpace(template))
             {
@@ -60,32 +65,51 @@
             }
 
             List<StringTemplatePart> parts = new();
-            bool hasParameters = false;
+            int parametersCount = 0;
 
             ReadOnlySpan<char> span = template.AsSpan();
 
             bool isOpened = false;
             int sliceStart = 0;
 
-            for (int i = 0; i < span.Length; ++i)
+            for (int i = 0; i < span.Length; i++)
             {
                 char ch = span[i];
                 if (!isOpened && ch == '{')
                 {
-                    if (i - sliceStart != 0)
-                    {
-                        string tmp = new(span[sliceStart..i]);
+                    int openingBracketCount = CountUtillChange(span, i, '{');
+                    bool isEscaped = openingBracketCount % 2 == 0;
+                    i += openingBracketCount - 1;
 
-                        if (string.IsNullOrWhiteSpace(tmp))
+                    if (!isEscaped)
+                    {
+                        if (i - sliceStart > 0)
                         {
-                            throw new FormatException($"String template '{template}' is invalid. Template cannot contain empty parameters.");
+                            string tmp = new(span[sliceStart..i]);
+
+                            if (string.IsNullOrWhiteSpace(tmp))
+                            {
+                                throw new FormatException($"String template '{template}' is invalid. Template cannot contain empty parameters.");
+                            }
+
+                            tmp = tmp.Replace("{{", "{").Replace("}}", "}");
+                            parts.Add(new StringTemplatePart(tmp, false));
                         }
 
-                        parts.Add(new StringTemplatePart(tmp));
+                        isOpened = true;
+                        sliceStart = i + 1;
                     }
+                }
+                else if (!isOpened && ch == '}')
+                {
+                    int closingBracketCount = CountUtillChange(span, i, '}');
+                    bool isEscaped = closingBracketCount % 2 == 0;
+                    i += closingBracketCount - 1;
 
-                    isOpened = true;
-                    sliceStart = i + 1;
+                    if (!isEscaped)
+                    {
+                        throw new FormatException($"String template '{template}' is invalid. Parameter closed but was never opened.");
+                    }
                 }
                 else if (isOpened && ch == '}')
                 {
@@ -95,6 +119,7 @@
                     }
 
                     string tmp = new(span[sliceStart..i]);
+                    tmp = tmp.Replace("{{", "{").Replace("}}", "}");
 
                     if (string.IsNullOrWhiteSpace(tmp))
                     {
@@ -102,7 +127,7 @@
                     }
 
                     parts.Add(new StringTemplatePart(tmp, true));
-                    hasParameters = true;
+                    ++parametersCount;
 
                     isOpened = false;
                     sliceStart = i + 1;
@@ -116,16 +141,29 @@
             if (span.Length != sliceStart)
             {
                 string tmp = new(span[sliceStart..]);
+                tmp = tmp.Replace("{{", "{").Replace("}}", "}");
 
                 if (string.IsNullOrWhiteSpace(tmp))
                 {
                     throw new FormatException($"String template '{template}' is invalid. Template cannot contain empty parameters.");
                 }
 
-                parts.Add(new StringTemplatePart(tmp));
+                parts.Add(new StringTemplatePart(tmp, false));
             }
 
-            return (hasParameters, parts);
+            return new StringTemplate(template, parts, parametersCount);
+        }
+
+        private static int CountUtillChange(ReadOnlySpan<char> span, int startIndex, char ch)
+        {
+            int i = startIndex;
+
+            while (i < span.Length && span[i] == ch)
+            {
+                ++i;
+            }
+
+            return i - startIndex;
         }
 
         /// <summary>
@@ -135,18 +173,20 @@
         /// <returns></returns>
         public bool Matches(string formatted)
         {
-            return HasParameters ? Unformat(formatted) is not null : formatted.Equals(Template, StringComparison.InvariantCulture);
+            return HasParameters ?
+                Unformat(formatted) is not null :
+                formatted.Equals(Template, StringComparison.InvariantCulture);
         }
 
         /// <summary>
         /// Returns unformated parameters, null when failed to unformat, or empty collection when successfully unformatted but no parameters were present in template.
         /// </summary>
-        public Dictionary<string, string>? Unformat(string formatted)
+        public IReadOnlyDictionary<string, string>? Unformat(string formatted)
         {
             Dictionary<string, string> boundedValues = new();
 
             int searchStartIndex = 0;
-            for (int i = 0; i < Parts.Count; ++i)
+            for (int i = 0; i < Parts.Count; i++)
             {
                 StringTemplatePart part = Parts[i];
 

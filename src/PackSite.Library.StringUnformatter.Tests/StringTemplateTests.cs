@@ -125,11 +125,95 @@ namespace PackSite.Library.StringUnformatter.Tests
             action.Should().Throw<FormatException>().WithMessage("*Template cannot contain empty parameters.");
         }
 
+        [Fact]
+        public void Should_parse_with_escaped_brackets1()
+        {
+            StringTemplate template = StringTemplate.Parse("/category/{{V}}/delete/{Id}/");
+
+            template.Parts.Should().BeEquivalentTo(new StringTemplatePart[]
+            {
+                new("/category/{V}/delete/"),
+                new("Id", true),
+                new("/"),
+            });
+        }
+
+        [Fact]
+        public void Should_parse_with_escaped_brackets2()
+        {
+            StringTemplate template = StringTemplate.Parse("/category/{{{{V}}}}/delete/{Id}/}}");
+
+            template.Parts.Should().BeEquivalentTo(new StringTemplatePart[]
+            {
+                new("/category/{{V}}/delete/"),
+                new("Id", true),
+                new("/}"),
+            });
+        }
+
+        [Fact]
+        public void Should_parse_with_escaped_brackets3()
+        {
+            StringTemplate template = StringTemplate.Parse("/category/{{{V}}}/delete/{Id}/");
+
+            template.Parts.Should().BeEquivalentTo(new StringTemplatePart[]
+            {
+                new("/category/{"),
+                new("V", true),
+                new("}/delete/"),
+                new("Id", true),
+                new("/"),
+            });
+        }
+
+
+        [Fact]
+        public void Should_parse_with_escaped_brackets4()
+        {
+            StringTemplate template = StringTemplate.Parse("{{XYZ/category/delete/{Id}/{Value}");
+
+            template.Parts.Should().BeEquivalentTo(new StringTemplatePart[]
+            {
+                new("{XYZ/category/delete/"),
+                new("Id", true),
+                new("/"),
+                new("Value", true)
+            });
+        }
+
+        [Fact]
+        public void Should_parse_with_escaped_brackets5()
+        {
+            StringTemplate template = StringTemplate.Parse("{{XYZ/category/delete/{Id}/{Value}}}");
+
+            template.Parts.Should().BeEquivalentTo(new StringTemplatePart[]
+            {
+                new("{XYZ/category/delete/"),
+                new("Id", true),
+                new("/"),
+                new("Value", true),
+                new("}")
+            });
+        }
+
+        [Fact]
+        public void Should_parse_with_escaped_brackets6()
+        {
+            StringTemplate template = StringTemplate.Parse("{{{{XYZ/category/delete/{Id}{{/}}{Value}}}}}}}");
+
+            template.Parts.Should().BeEquivalentTo(new StringTemplatePart[]
+            {
+                new("{{XYZ/category/delete/"),
+                new("Id", true),
+                new("{/}"),
+                new("Value", true),
+                new("}}}")
+            });
+        }
+
         [Theory]
-        [InlineData("/category/{{V}}/delete/{Id}/")]
         [InlineData("{Group{XYZ}/category/delete/{Id}/{Value}")]
         [InlineData("{XYZ/category/delete/{Id}/{Value}")]
-        [InlineData("{{XYZ/category/delete/{Id}/{Value}")]
         [InlineData("{{XYZ}/category/delete/{Id}/{Value}")]
         [InlineData("{XYZ}}/category/delete/{Id}/{Value}")]
         [InlineData("XYZ}/category/delete/{Id}/{XYZ}")]
