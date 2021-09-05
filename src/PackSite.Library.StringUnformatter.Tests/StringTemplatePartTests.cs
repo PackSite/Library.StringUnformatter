@@ -28,16 +28,8 @@ namespace PackSite.Library.StringUnformatter.Tests
             StringTemplatePart first = new("test", true);
             StringTemplatePart second = new("test", true);
 
-            first.Should().Be(second);
-            (first == second).Should().BeTrue();
-            (first != second).Should().BeFalse();
-        }
-
-        [Fact]
-        public void Parts_should_be_equal_with_values()
-        {
-            StringTemplatePart first = new("test", true);
-            StringTemplatePart second = new("test", true);
+            first.Should().Be(first);
+            second.Should().Be(second);
 
             first.Should().Be(second);
             (first == second).Should().BeTrue();
@@ -50,6 +42,7 @@ namespace PackSite.Library.StringUnformatter.Tests
             StringTemplatePart first = new("test", true);
             StringTemplatePart second = new("other-test", true);
 
+            first.Should().NotBe(new object());
             first.Should().NotBe(second);
             (first == second).Should().BeFalse();
             (first != second).Should().BeTrue();

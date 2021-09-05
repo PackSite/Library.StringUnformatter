@@ -102,6 +102,11 @@
         /// <inheritdoc/>
         public bool Equals(StringTemplatePart? other)
         {
+            if (object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
             return other is not null &&
                    Value == other.Value &&
                    IsParameter == other.IsParameter;

@@ -274,6 +274,22 @@ namespace PackSite.Library.StringUnformatter.Tests
         }
 
         [Fact]
+        public void Should_bind_template_with_no_parameters_to_empty_collection()
+        {
+            StringTemplate template = StringTemplate.Parse("category/delete/Id/Value");
+
+            template.Unformat("category/delete/Id/Value").Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Should_bind_template_with_no_parameters_to_null()
+        {
+            StringTemplate template = StringTemplate.Parse("category/delete/Id/Value");
+
+            template.Unformat("category/delete/00-000/test").Should().BeNull();
+        }
+
+        [Fact]
         public void Should_be_comparable()
         {
             StringTemplate template = StringTemplate.FromParts(new StringTemplatePart[]
@@ -285,6 +301,12 @@ namespace PackSite.Library.StringUnformatter.Tests
 
             StringTemplate otherTemplate = StringTemplate.Parse("category/delete/this/{Id}/QWErty");
             StringTemplate otherWrongTemplate = StringTemplate.Parse("category/delete/this/{Id}/WErty");
+
+            template.Should().Be(template);
+
+            template.Should().NotBe(new object());
+            otherTemplate.Should().NotBe(new object());
+            otherWrongTemplate.Should().NotBe(new object());
 
             (template == otherTemplate).Should().BeTrue();
             (template != otherTemplate).Should().BeFalse();

@@ -86,13 +86,8 @@
                         if (i - sliceStart > 0)
                         {
                             string tmp = new(span[sliceStart..i]);
-
-                            if (string.IsNullOrWhiteSpace(tmp))
-                            {
-                                throw new FormatException($"String template '{template}' is invalid. Template cannot contain empty parameters.");
-                            }
-
                             tmp = tmp.Replace("{{", "{").Replace("}}", "}");
+
                             parts.Add(new StringTemplatePart(tmp, false));
                         }
 
@@ -143,11 +138,6 @@
                 string tmp = new(span[sliceStart..]);
                 tmp = tmp.Replace("{{", "{").Replace("}}", "}");
 
-                if (string.IsNullOrWhiteSpace(tmp))
-                {
-                    throw new FormatException($"String template '{template}' is invalid. Template cannot contain empty parameters.");
-                }
-
                 parts.Add(new StringTemplatePart(tmp, false));
             }
 
@@ -173,9 +163,7 @@
         /// <returns></returns>
         public bool Matches(string formatted)
         {
-            return HasParameters ?
-                Unformat(formatted) is not null :
-                formatted.Equals(Template, StringComparison.InvariantCulture);
+            return Unformat(formatted) is not null;
         }
 
         /// <summary>
@@ -184,6 +172,11 @@
         public IReadOnlyDictionary<string, string>? Unformat(string formatted)
         {
             Dictionary<string, string> boundedValues = new();
+
+            if (!HasParameters)
+            {
+                return formatted.Equals(Template, StringComparison.InvariantCulture) ? boundedValues : null;
+            }
 
             int searchStartIndex = 0;
             for (int i = 0; i < Parts.Count; i++)
@@ -216,11 +209,6 @@
                     else
                     {
                         string value1 = formatted[searchStartIndex..];
-
-                        if (string.IsNullOrWhiteSpace(value1))
-                        {
-                            return null;
-                        }
 
                         boundedValues.Add(part.Value, value1);
                     }
@@ -255,6 +243,11 @@
         /// <inheritdoc/>
         public bool Equals(StringTemplate? other)
         {
+            if (object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
             return other is not null &&
                 other.HasParameters == HasParameters &&
                 other.Parts.Count == Parts.Count &&
