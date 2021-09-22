@@ -43,4 +43,4 @@ jobs:
       uses: codecov/codecov-action@v1.0.14
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./src/PackSite.Library.StringUnformatter.Tests/bin/Release/Coverage.xml
+        files: ./src/**/Coverage.xml

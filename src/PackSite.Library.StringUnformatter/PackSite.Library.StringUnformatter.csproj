@@ -4,7 +4,7 @@
     <TargetFrameworks>net5.0;netstandard2.1</TargetFrameworks>
     <Authors>$(Company)</Authors>
     <Description>String unformatter</Description>
-    <PackageTags>PackSite library string format unformatter</PackageTags>
+    <PackageTags>PackSite library string format unformatter unformat schema template</PackageTags>
     <PackageProjectUrl>https://github.com/PackSite/Library.StringUnformatter</PackageProjectUrl>
     <PackageReleaseNotes>https://github.com/PackSite/Library.StringUnformatter/blob/main/CHANGELOG.md</PackageReleaseNotes>
     <PackageIcon>icon-64px.png</PackageIcon>
