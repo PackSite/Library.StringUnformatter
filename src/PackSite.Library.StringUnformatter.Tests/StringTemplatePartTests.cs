@@ -8,18 +8,32 @@ namespace PackSite.Library.StringUnformatter.Tests
     public class StringTemplatePartTests
     {
         [Fact]
-        public void Part_value_should_have_proper_values()
+        public void Part_should_have_proper_values()
         {
             new StringTemplatePart(null!, true).Value.Should().NotBeNull();
             new StringTemplatePart(null!, false).IsParameter.Should().BeFalse();
 
             StringTemplatePart first = new("test");
             first.Value.Should().Be("test");
+            first.Parameter.Should().BeNull();
+            first.Format.Should().BeNull();
             first.IsParameter.Should().BeFalse();
 
             StringTemplatePart second = new("other-test", true);
             second.Value.Should().Be("other-test");
+            second.Parameter.Should().Be("other-test");
+            second.Format.Should().BeNull();
             second.IsParameter.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Part_with_format_should_have_proper_values()
+        {
+            StringTemplatePart first = new("test:format", true);
+            first.Value.Should().Be("test:format");
+            first.Parameter.Should().Be("test");
+            first.Format.Should().Be("format");
+            first.IsParameter.Should().BeTrue();
         }
 
         [Fact]

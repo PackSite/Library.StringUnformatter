@@ -61,6 +61,20 @@ namespace PackSite.Library.StringUnformatter.Tests
         }
 
         [Fact]
+        public void Should_parse_with_colon()
+        {
+            StringTemplate template = StringTemplate.Parse("category/delete/{Id}/{date:d}");
+
+            template.Parts.Should().BeEquivalentTo(new StringTemplatePart[]
+            {
+                new("category/delete/"),
+                new("Id", true),
+                new("/"),
+                new("date:d", true)
+            });
+        }
+
+        [Fact]
         public void Should_parse_single_parameter()
         {
             StringTemplate template = StringTemplate.Parse("{Id}");
@@ -315,6 +329,36 @@ namespace PackSite.Library.StringUnformatter.Tests
             (template == otherWrongTemplate).Should().BeFalse();
             (template != otherWrongTemplate).Should().BeTrue();
             template.Equals(otherWrongTemplate).Should().BeFalse();
+        }
+
+
+        [Fact]
+        public void Should_format()
+        {
+            StringTemplate template = StringTemplate.Parse("category/delete/{id:X}/{number:C2}/{text}");
+
+            template.Parts.Should().BeEquivalentTo(new StringTemplatePart[]
+            {
+                new("category/delete/"),
+                new("id:X", true),
+                new("/"),
+                new("number:C2", true),
+                new("/"),
+                new("text", true),
+            });
+
+            Guid id = Guid.NewGuid();
+            double number = 1.23;
+            string text = "avx";
+
+            string formatted = template.Format(new Dictionary<string, object?>
+            {
+                ["id"] = id,
+                ["number"] = number,
+                ["text"] = text,
+            });
+
+            formatted.Should().Be($"category/delete/{id:X}/{number:C2}/{text}");
         }
     }
 }

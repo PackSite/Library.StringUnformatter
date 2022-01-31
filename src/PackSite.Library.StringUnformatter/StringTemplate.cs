@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Text;
 
     /// <summary>
     /// String template object.
@@ -232,6 +233,61 @@
             }
 
             return boundedValues;
+        }
+
+        /// <summary>
+        /// Formats the message.
+        /// </summary>
+        /// <param name="placeholderValues"></param>
+        /// <returns></returns>
+        public string Format(IEnumerable<KeyValuePair<string, object?>> placeholderValues)
+        {
+            if (!HasParameters)
+            {
+                return Template;
+            }
+
+            IReadOnlyDictionary<string, object?> dict = placeholderValues as Dictionary<string, object?> ??
+                new Dictionary<string, object?>(placeholderValues);
+
+            return Format(dict);
+        }
+
+        /// <summary>
+        /// Formats the message.
+        /// </summary>
+        /// <param name="placeholderValues"></param>
+        /// <returns></returns>
+        public string Format(IDictionary<string, object?> placeholderValues)
+        {
+            if (!HasParameters)
+            {
+                return Template;
+            }
+
+            StringBuilder builder = new();
+
+            for (int i = 0; i < Parts.Count; i++)
+            {
+                StringTemplatePart part = Parts[i];
+
+                if (part.IsParameter && part.Parameter is not null)
+                {
+                    object? placeholderValue = placeholderValues[part.Parameter];
+
+                    string? text = part.Format is null
+                        ? placeholderValue?.ToString()
+                        : string.Format($"{{0:{part.Format}}}", placeholderValue);
+
+                    builder.Append(text ?? string.Empty);
+                }
+                else
+                {
+                    builder.Append(part.Value);
+                }
+            }
+
+            return builder.ToString();
         }
 
         /// <inheritdoc/>

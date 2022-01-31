@@ -11,22 +11,53 @@
     public sealed class StringTemplatePart : IEquatable<StringTemplatePart>
     {
         /// <summary>
-        /// String template part value
+        /// String template part raw value.
         /// </summary>
         public string Value { get; }
 
         /// <summary>
-        /// Whether value is parameter
+        /// Whether value is parameter.
         /// </summary>
         public bool IsParameter { get; }
 
         /// <summary>
+        /// Parameter value.
+        /// </summary>
+        [MemberNotNullWhen(true, nameof(IsParameter))]
+        public string? Parameter { get; }
+
+        /// <summary>
+        /// Value format.
+        /// </summary>
+        public string? Format { get; }
+
+        /// <summary>
         /// Initializes an instance of <see cref="StringTemplatePart"/>.
         /// </summary>
-        public StringTemplatePart(string value, bool isParameter = false)
+        public StringTemplatePart(string? value, bool isParameter = false)
         {
             Value = value ?? string.Empty;
+            Parameter = isParameter ? Value : null;
             IsParameter = isParameter;
+
+            if (isParameter && !string.IsNullOrEmpty(value))
+            {
+                int formatDelimiterPosition = Value.LastIndexOf(':');
+
+                if (formatDelimiterPosition == 0)
+                {
+                    throw new FormatException($"Message format must not be the only part of the '{nameof(StringTemplatePart)}'");
+                }
+                else if (formatDelimiterPosition == Value.Length - 1)
+                {
+                    throw new FormatException($"Message format must not be the last character of the '{nameof(StringTemplatePart)}'");
+                }
+                else if (formatDelimiterPosition > 0)
+                {
+                    Parameter = Value.Substring(0, formatDelimiterPosition);
+                    Format = Value.Substring(formatDelimiterPosition + 1);
+                }
+            }
         }
 
         /// <summary>
@@ -108,8 +139,8 @@
             }
 
             return other is not null &&
-                   Value == other.Value &&
-                   IsParameter == other.IsParameter;
+                   IsParameter == other.IsParameter &&
+                   Value == other.Value;
         }
 
         /// <summary>
