@@ -26,7 +26,7 @@
         public bool HasParameters => ParmetersCount > 0;
 
         /// <summary>
-        /// Number of parmeters in the template.
+        /// Number of parameters in the template.
         /// </summary>
         public int ParmetersCount { get; }
 
@@ -168,7 +168,7 @@
         }
 
         /// <summary>
-        /// Returns unformated parameters, null when failed to unformat, or empty collection when successfully unformatted but no parameters were present in template.
+        /// Returns unformatted parameters, null when failed to unformat, or empty collection when successfully unformatted but no parameters were present in template.
         /// </summary>
         public IReadOnlyDictionary<string, string>? Unformat(string formatted)
         {
