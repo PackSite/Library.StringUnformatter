@@ -54,8 +54,8 @@
                 }
                 else if (formatDelimiterPosition > 0)
                 {
-                    Parameter = Value.Substring(0, formatDelimiterPosition);
-                    Format = Value.Substring(formatDelimiterPosition + 1);
+                    Parameter = Value[..formatDelimiterPosition];
+                    Format = Value[(formatDelimiterPosition + 1)..];
                 }
             }
         }

@@ -32,7 +32,7 @@ namespace PackSite.Library.StringUnformatter.Tests
 
             StringTemplate otherTemplate = StringTemplate.Parse("category/delete/{Id}/QWErty");
             template.Template.Should().Be("category/delete/{Id}/QWErty");
-            template.Should().Equals(otherTemplate);
+            template.Should().Be(otherTemplate);
         }
 
         [Fact]
@@ -179,7 +179,6 @@ namespace PackSite.Library.StringUnformatter.Tests
                 new("/"),
             });
         }
-
 
         [Fact]
         public void Should_parse_with_escaped_brackets4()
@@ -330,7 +329,6 @@ namespace PackSite.Library.StringUnformatter.Tests
             (template != otherWrongTemplate).Should().BeTrue();
             template.Equals(otherWrongTemplate).Should().BeFalse();
         }
-
 
         [Fact]
         public void Should_format()

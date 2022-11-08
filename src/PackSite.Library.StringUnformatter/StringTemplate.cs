@@ -128,7 +128,7 @@
                     isOpened = false;
                     sliceStart = i + 1;
                 }
-                else if (ch == '{' || ch == '}')
+                else if (ch is '{' or '}')
                 {
                     throw new FormatException($"String template '{template}' is invalid. Parameter {(isOpened ? "opened" : "closed")} but was never {(!isOpened ? "opened" : "closed")}.");
                 }
