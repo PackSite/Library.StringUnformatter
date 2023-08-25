@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31005.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PackSite.Library.StringUnformatter", "PackSite.Library.StringUnformatter\PackSite.Library.StringUnformatter.csproj", "{AD087126-7663-491F-9B49-0D9C75B0EA75}"
 EndProject
@@ -20,6 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configuration", "Configurat
 		..\.gitignore = ..\.gitignore
 		clean.ps1 = clean.ps1
 		Directory.Build.props = Directory.Build.props
+		NuGet.config = NuGet.config
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BC681B91-571A-4D8A-8254-1B2177D6ABCD}"
