@@ -101,11 +101,11 @@ namespace PackSite.Library.StringUnformatter.Tests
         [Fact]
         public void Parts_should_be_joined_using_enumerable()
         {
-            List<StringTemplatePart> list = new()
-            {
+            List<StringTemplatePart> list =
+            [
                 new("test-param", true),
                 new("other-Test-Value")
-            };
+            ];
 
             string result = StringTemplatePart.Join(list);
             result.Should().NotBeNullOrWhiteSpace();
@@ -115,11 +115,11 @@ namespace PackSite.Library.StringUnformatter.Tests
         [Fact]
         public void Parts_should_be_joined_using_enumerable_and_params_count_should_be_returned()
         {
-            List<StringTemplatePart> list = new()
-            {
+            List<StringTemplatePart> list =
+            [
                 new("test-param", true),
                 new("other-Test-Value")
-            };
+            ];
 
             string result = StringTemplatePart.Join(list, out int parametersCount);
             result.Should().NotBeNullOrWhiteSpace();

@@ -65,7 +65,7 @@
                 throw new ArgumentException($"'{nameof(template)}' cannot be null or whitespace", nameof(template));
             }
 
-            List<StringTemplatePart> parts = new();
+            List<StringTemplatePart> parts = [];
             int parametersCount = 0;
 
             ReadOnlySpan<char> span = template.AsSpan();
@@ -172,7 +172,7 @@
         /// </summary>
         public IReadOnlyDictionary<string, string>? Unformat(string formatted)
         {
-            Dictionary<string, string> boundedValues = new();
+            Dictionary<string, string> boundedValues = [];
 
             if (!HasParameters)
             {
