@@ -31,6 +31,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{
 		..\.github\workflows\CD-GitHub.yml = ..\.github\workflows\CD-GitHub.yml
 		..\.github\workflows\CD-NuGet.yml = ..\.github\workflows\CD-NuGet.yml
 		..\.github\workflows\CI.yml = ..\.github\workflows\CI.yml
+		..\.github\workflows\delete-old-workflows.yml = ..\.github\workflows\delete-old-workflows.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "props", "props", "{C3D45EFB-B129-4C16-ABF1-0FF2F27B10FF}"
+	ProjectSection(SolutionItems) = preProject
+		props\PackSite.Libraries.props = props\PackSite.Libraries.props
 	EndProjectSection
 EndProject
 Global
@@ -75,6 +81,7 @@ Global
 		{AD087126-7663-491F-9B49-0D9C75B0EA75} = {DE385242-79E5-41FC-848F-DEE32A2C84F5}
 		{E998B2DC-FD84-44D5-A47E-1FE76664810C} = {BC681B91-571A-4D8A-8254-1B2177D6ABCD}
 		{F27D31BE-AE10-4682-B458-5F802E2DF3D9} = {925881C4-1646-44BE-825A-3A8A967B46F6}
+		{C3D45EFB-B129-4C16-ABF1-0FF2F27B10FF} = {925881C4-1646-44BE-825A-3A8A967B46F6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4F64AEA3-F0DE-457E-9486-BC5B7DEAC07B}
