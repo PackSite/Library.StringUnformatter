@@ -1,6 +1,7 @@
 ﻿namespace PackSite.Library.StringUnformatter
 {
     using System;
+    using System.Collections.Frozen;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
@@ -46,11 +47,13 @@
         /// <summary>
         /// Parse template from string.
         /// </summary>
-        public static StringTemplate FromParts(IReadOnlyList<StringTemplatePart> parts)
+        public static StringTemplate FromParts(IEnumerable<StringTemplatePart> parts)
         {
+            ArgumentNullException.ThrowIfNull(parts);
+
             string template = StringTemplatePart.Join(parts, out int parametersCount);
 
-            return new StringTemplate(template, parts, parametersCount);
+            return new StringTemplate(template, [.. parts], parametersCount);
         }
 
         /// <summary>
@@ -60,10 +63,7 @@
         /// <exception cref="FormatException">Throws when template format is invalid.</exception>
         public static StringTemplate Parse(string template)
         {
-            if (string.IsNullOrWhiteSpace(template))
-            {
-                throw new ArgumentException($"'{nameof(template)}' cannot be null or whitespace", nameof(template));
-            }
+            ArgumentException.ThrowIfNullOrWhiteSpace(template);
 
             List<StringTemplatePart> parts = [];
             int parametersCount = 0;
@@ -170,13 +170,20 @@
         /// <summary>
         /// Returns unformatted parameters, null when failed to unformat, or empty collection when successfully unformatted but no parameters were present in template.
         /// </summary>
-        public IReadOnlyDictionary<string, string>? Unformat(string formatted)
+        public FrozenDictionary<string, string>? Unformat(string formatted)
         {
+            if (string.IsNullOrWhiteSpace(formatted))
+            {
+                return FrozenDictionary<string, string>.Empty;
+            }
+
             Dictionary<string, string> boundedValues = [];
 
             if (!HasParameters)
             {
-                return formatted.Equals(Template, StringComparison.InvariantCulture) ? boundedValues : null;
+                return formatted.Equals(Template, StringComparison.InvariantCulture)
+                    ? FrozenDictionary<string, string>.Empty
+                    : null;
             }
 
             int searchStartIndex = 0;
@@ -232,7 +239,7 @@
                 }
             }
 
-            return boundedValues;
+            return boundedValues.ToFrozenDictionary();
         }
 
         /// <summary>
@@ -242,12 +249,14 @@
         /// <returns></returns>
         public string Format(IEnumerable<KeyValuePair<string, object?>> placeholderValues)
         {
+            ArgumentNullException.ThrowIfNull(placeholderValues);
+
             if (!HasParameters)
             {
                 return Template;
             }
 
-            IReadOnlyDictionary<string, object?> dict = placeholderValues as Dictionary<string, object?> ??
+            IReadOnlyDictionary<string, object?> dict = placeholderValues as IReadOnlyDictionary<string, object?> ??
                 new Dictionary<string, object?>(placeholderValues);
 
             return Format(dict);
@@ -258,8 +267,67 @@
         /// </summary>
         /// <param name="placeholderValues"></param>
         /// <returns></returns>
+        public string Format(Dictionary<string, object?> placeholderValues)
+        {
+            ArgumentNullException.ThrowIfNull(placeholderValues);
+
+            if (!HasParameters)
+            {
+                return Template;
+            }
+
+            IReadOnlyDictionary<string, object?> dict = placeholderValues as IReadOnlyDictionary<string, object?> ??
+                new Dictionary<string, object?>(placeholderValues);
+
+            return Format(dict);
+        }
+
+        /// <summary>
+        /// Formats the message.
+        /// </summary>
+        /// <param name="placeholderValues"></param>
+        /// <returns></returns>
+        public string Format(FrozenDictionary<string, object?> placeholderValues)
+        {
+            ArgumentNullException.ThrowIfNull(placeholderValues);
+
+            if (!HasParameters)
+            {
+                return Template;
+            }
+
+            return Format(placeholderValues);
+        }
+
+        /// <summary>
+        /// Formats the message.
+        /// </summary>
+        /// <param name="placeholderValues"></param>
+        /// <returns></returns>
         public string Format(IDictionary<string, object?> placeholderValues)
         {
+            ArgumentNullException.ThrowIfNull(placeholderValues);
+
+            if (!HasParameters)
+            {
+                return Template;
+            }
+
+            IReadOnlyDictionary<string, object?> dict = placeholderValues as IReadOnlyDictionary<string, object?> ??
+                new Dictionary<string, object?>(placeholderValues);
+
+            return Format(dict);
+        }
+
+        /// <summary>
+        /// Formats the message.
+        /// </summary>
+        /// <param name="placeholderValues"></param>
+        /// <returns></returns>
+        public string Format(IReadOnlyDictionary<string, object?> placeholderValues)
+        {
+            ArgumentNullException.ThrowIfNull(placeholderValues);
+
             if (!HasParameters)
             {
                 return Template;
@@ -307,7 +375,7 @@
             return other is not null &&
                 other.HasParameters == HasParameters &&
                 other.Parts.Count == Parts.Count &&
-                other.Template == Template; ;
+                other.Template == Template;
         }
 
         /// <summary>

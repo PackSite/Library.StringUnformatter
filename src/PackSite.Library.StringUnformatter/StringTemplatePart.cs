@@ -91,6 +91,11 @@
                 }
             }
 
+            if (stringBuilder.Length <= 0)
+            {
+                throw new ArgumentException("Parts collections must contain at least one element.", nameof(parts));
+            }
+
             return stringBuilder.ToString();
         }
 
@@ -119,6 +124,11 @@
                 {
                     stringBuilder.Append(part.Value);
                 }
+            }
+
+            if (stringBuilder.Length <= 0)
+            {
+                throw new ArgumentException("Parts collections must contain at least one element.", nameof(parts));
             }
 
             return stringBuilder.ToString();

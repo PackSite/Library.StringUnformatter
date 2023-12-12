@@ -108,7 +108,7 @@ namespace PackSite.Library.StringUnformatter.Tests
                 StringTemplate template = StringTemplate.Parse(" ");
             };
 
-            action.Should().Throw<ArgumentException>().WithMessage("*cannot be null or whitespace*");
+            action.Should().Throw<ArgumentException>().WithMessage("*The value cannot be an empty string or composed entirely of whitespace*");
         }
 
         [Theory]

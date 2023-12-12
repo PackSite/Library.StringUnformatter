@@ -85,17 +85,14 @@ namespace PackSite.Library.StringUnformatter.Tests
         }
 
         [Fact]
-        public void Empty_collection_should_be_joined()
+        public void Empty_collection_should_not_be_joined()
         {
-            string result0 = StringTemplatePart.Join(new List<StringTemplatePart>());
-            result0.Should().BeEmpty();
+            Action action = () =>
+            {
+                string result0 = StringTemplatePart.Join(new List<StringTemplatePart>());
+            };
 
-            string result1 = StringTemplatePart.Join(new List<StringTemplatePart>(), out int parametersCount);
-            result1.Should().BeEmpty();
-            parametersCount.Should().Be(0);
-
-            string result2 = StringTemplatePart.Join(Array.Empty<StringTemplatePart>());
-            result2.Should().BeEmpty();
+            action.Should().Throw<ArgumentException>().WithMessage("*Parts collections must contain at least one element*");
         }
 
         [Fact]
