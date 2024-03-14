@@ -26,4 +26,4 @@ jobs:
 
     - name: Deploy
       run: |
-        dotnet nuget push src/PackSite.Library.StringUnformatter/bin/Release/*.nupkg -s nuget.org -k ${{ secrets.NUGET_TOKEN }}
+        dotnet nuget push src/PackSite.Library.StringUnformatter/bin/Release/*.nupkg -s nuget.org -k ${{ secrets.NUGET_TOKEN }} --skip-duplicate
