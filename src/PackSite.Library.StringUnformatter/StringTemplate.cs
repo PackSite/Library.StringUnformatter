@@ -296,7 +296,7 @@
                 return Template;
             }
 
-            return Format(placeholderValues);
+            return Format(placeholderValues as IReadOnlyDictionary<string, object?>);
         }
 
         /// <summary>
