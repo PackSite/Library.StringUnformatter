@@ -10,8 +10,8 @@ namespace PackSite.Library.StringUnformatter.Tests
         [Fact]
         public void Part_should_have_proper_values()
         {
-            new StringTemplatePart(null!, true).Value.Should().NotBeNull();
-            new StringTemplatePart(null!, false).IsParameter.Should().BeFalse();
+            new StringTemplatePart(null, true).Value.Should().NotBeNull();
+            new StringTemplatePart(null, false).IsParameter.Should().BeFalse();
 
             StringTemplatePart first = new("test");
             first.Value.Should().Be("test");
@@ -101,7 +101,7 @@ namespace PackSite.Library.StringUnformatter.Tests
             List<StringTemplatePart> list =
             [
                 new("test-param", true),
-                new("other-Test-Value")
+                new("other-Test-Value"),
             ];
 
             string result = StringTemplatePart.Join(list);
@@ -115,7 +115,7 @@ namespace PackSite.Library.StringUnformatter.Tests
             List<StringTemplatePart> list =
             [
                 new("test-param", true),
-                new("other-Test-Value")
+                new("other-Test-Value"),
             ];
 
             string result = StringTemplatePart.Join(list, out int parametersCount);

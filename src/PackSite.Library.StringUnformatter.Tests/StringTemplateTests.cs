@@ -16,7 +16,7 @@ namespace PackSite.Library.StringUnformatter.Tests
             {
                 new("category/delete/"),
                 new("Id", true),
-                new("/QWErty")
+                new("/QWErty"),
             });
         }
 
@@ -27,7 +27,7 @@ namespace PackSite.Library.StringUnformatter.Tests
             {
                 new("category/delete/"),
                 new("Id", true),
-                new("/QWErty")
+                new("/QWErty"),
             });
 
             StringTemplate otherTemplate = StringTemplate.Parse("category/delete/{Id}/QWErty");
@@ -45,7 +45,7 @@ namespace PackSite.Library.StringUnformatter.Tests
                 new("category/delete/"),
                 new("Id", true),
                 new("/"),
-                new("Value", true)
+                new("Value", true),
             });
         }
 
@@ -56,7 +56,7 @@ namespace PackSite.Library.StringUnformatter.Tests
 
             template.Parts.Should().BeEquivalentTo(new StringTemplatePart[]
             {
-                new("category/get-all")
+                new("category/get-all"),
             });
         }
 
@@ -70,7 +70,7 @@ namespace PackSite.Library.StringUnformatter.Tests
                 new("category/delete/"),
                 new("Id", true),
                 new("/"),
-                new("date:d", true)
+                new("date:d", true),
             });
         }
 
@@ -81,7 +81,7 @@ namespace PackSite.Library.StringUnformatter.Tests
 
             template.Parts.Should().BeEquivalentTo(new StringTemplatePart[]
             {
-                new("Id", true)
+                new("Id", true),
             });
         }
 
@@ -96,7 +96,7 @@ namespace PackSite.Library.StringUnformatter.Tests
                 new("/category/delete/"),
                 new("Id", true),
                 new("/"),
-                new("Value", true)
+                new("Value", true),
             });
         }
 
@@ -190,7 +190,7 @@ namespace PackSite.Library.StringUnformatter.Tests
                 new("{XYZ/category/delete/"),
                 new("Id", true),
                 new("/"),
-                new("Value", true)
+                new("Value", true),
             });
         }
 
@@ -205,7 +205,7 @@ namespace PackSite.Library.StringUnformatter.Tests
                 new("Id", true),
                 new("/"),
                 new("Value", true),
-                new("}")
+                new("}"),
             });
         }
 
@@ -220,7 +220,7 @@ namespace PackSite.Library.StringUnformatter.Tests
                 new("Id", true),
                 new("{/}"),
                 new("Value", true),
-                new("}}}")
+                new("}}}"),
             });
         }
 
@@ -282,7 +282,7 @@ namespace PackSite.Library.StringUnformatter.Tests
             template.Unformat("category/delete/00-000/test").Should().BeEquivalentTo(new Dictionary<string, string>
             {
                 { "Id", "00-000" },
-                { "Value", "test" }
+                { "Value", "test" },
             });
         }
 
@@ -309,7 +309,7 @@ namespace PackSite.Library.StringUnformatter.Tests
             {
                 new("category/delete/this/"),
                 new("Id", true),
-                new("/QWErty")
+                new("/QWErty"),
             });
 
             StringTemplate otherTemplate = StringTemplate.Parse("category/delete/this/{Id}/QWErty");
