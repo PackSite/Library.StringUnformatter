@@ -6,7 +6,7 @@
 	</PropertyGroup>
 
 	<ImportGroup>
-		<Import Project="props/Includes.props" />
+		<Import Project="props/Includes.Packages.props" />
 	</ImportGroup>
 	
 	<ItemGroup>
