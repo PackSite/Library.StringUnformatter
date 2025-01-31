@@ -1,0 +1,21 @@
+﻿{
+  EmptyParameter: {
+    Value: ,
+    IsParameter: true,
+    Parameter: 
+  },
+  EmptyNonParameter: {
+    Value: ,
+    IsParameter: true,
+    Parameter: 
+  },
+  Parameter: {
+    Value: other-test,
+    IsParameter: true,
+    Parameter: other-test
+  },
+  NonParameter: {
+    Value: other-test,
+    IsParameter: false
+  }
+}

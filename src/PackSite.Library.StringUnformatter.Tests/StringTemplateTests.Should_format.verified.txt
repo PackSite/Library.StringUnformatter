@@ -1,0 +1,39 @@
+﻿{
+  Template: {
+    Template: category/delete/{id:X}/{number:C2}/{text},
+    Parts: [
+      {
+        Value: category/delete/,
+        IsParameter: false
+      },
+      {
+        Value: id:X,
+        IsParameter: true,
+        Parameter: id,
+        Format: X
+      },
+      {
+        Value: /,
+        IsParameter: false
+      },
+      {
+        Value: number:C2,
+        IsParameter: true,
+        Parameter: number,
+        Format: C2
+      },
+      {
+        Value: /,
+        IsParameter: false
+      },
+      {
+        Value: text,
+        IsParameter: true,
+        Parameter: text
+      }
+    ],
+    HasParameters: true,
+    ParmetersCount: 3
+  },
+  Formatted: category/delete/{0xefaac911,0x2cb3,0x454f,{0xaa,0x44,0xc2,0xad,0x37,0xfa,0x7f,0xcd}}/1,23 zł/avx
+}

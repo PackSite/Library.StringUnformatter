@@ -66,12 +66,12 @@ namespace PackSite.Library.StringUnformatter.Tests
         public async Task Should_parse_when_starting_with_parameter()
         {
             StringTemplate template = StringTemplate.Parse("{Group}/category/delete/{Id}/{Value}");
-            
+
             await Verifier.Verify(template);
         }
 
         [Fact]
-        public async Task Should_not_parse_when_template_is_empty()
+        public void Should_not_parse_when_template_is_empty()
         {
             Action action = () =>
             {
@@ -84,7 +84,7 @@ namespace PackSite.Library.StringUnformatter.Tests
         [Theory]
         [InlineData("{Group}{XYZ}/category/delete/{Id}/{Value}")]
         [InlineData("{XYZ}/category/delete/{Id}{Value}{XYZ}")]
-        public async Task Should_not_parse_with_two_or_more_subsequent_parameters(string str)
+        public void Should_not_parse_with_two_or_more_subsequent_parameters(string str)
         {
             Action action = () =>
             {
@@ -99,7 +99,7 @@ namespace PackSite.Library.StringUnformatter.Tests
         [InlineData("/cate{}gory/delete/{Id}/{}")]
         [InlineData("/category/delete/{Id}/{}")]
         [InlineData("/category/delete/{Arg}/{}/")]
-        public async Task Should_not_parse_when_empty_parameter(string str)
+        public void Should_not_parse_when_empty_parameter(string str)
         {
             Action action = () =>
             {
@@ -165,7 +165,7 @@ namespace PackSite.Library.StringUnformatter.Tests
         [InlineData("XYZ}/category/delete/{Id}/{XYZ}")]
         [InlineData("XYZ}/category/delete/{Id}/{{XYZ}")]
         [InlineData("XYZ}/category/delete/{Id}/{XYZ}}")]
-        public async Task Should_not_parse_when_missing_bracket(string str)
+        public void Should_not_parse_when_missing_bracket(string str)
         {
             Action action = () =>
             {
@@ -182,7 +182,7 @@ namespace PackSite.Library.StringUnformatter.Tests
         [InlineData("category/delete/{Id}/ABC{X}/QWERTY", "category/delete/00-000/ABC/str/QWERTY")]
         [InlineData("category/delete/{Id}/{Value}", "category/delete/00-000/test")]
         [InlineData("{Id}/{Value}", "category/delete")]
-        public async Task Should_match_string_to_template(string input, string output)
+        public void Should_match_string_to_template(string input, string output)
         {
             StringTemplate template = StringTemplate.Parse(input);
 
@@ -200,7 +200,7 @@ namespace PackSite.Library.StringUnformatter.Tests
         [InlineData("category/delete/{Id}/{Value}", "category/delete//")]
         [InlineData("category/delete/{Id}/{Value}", "/delete///")]
         [InlineData("category/delete/{Id}/{Value}", "category/00-000/test")]
-        public async Task Should_not_match_string_to_template(string input, string output)
+        public void Should_not_match_string_to_template(string input, string output)
         {
             StringTemplate template = StringTemplate.Parse(input);
 
@@ -214,7 +214,7 @@ namespace PackSite.Library.StringUnformatter.Tests
 
             FrozenDictionary<string, string>? result = template.Unformat("category/delete/00-000/test");
 
-           await Verifier.Verify(result);
+            await Verifier.Verify(result);
         }
 
         [Fact]
@@ -222,7 +222,7 @@ namespace PackSite.Library.StringUnformatter.Tests
         {
             StringTemplate template = StringTemplate.Parse("category/delete/Id/Value");
 
-            var result = template.Unformat("category/delete/Id/Value");
+            FrozenDictionary<string, string>? result = template.Unformat("category/delete/Id/Value");
 
             await Verifier.Verify(result);
         }
@@ -232,13 +232,13 @@ namespace PackSite.Library.StringUnformatter.Tests
         {
             StringTemplate template = StringTemplate.Parse("category/delete/Id/Value");
 
-            var result = template.Unformat("category/delete/00-000/test");
+            FrozenDictionary<string, string>? result = template.Unformat("category/delete/00-000/test");
 
             await Verifier.Verify(result);
         }
 
         [Fact]
-        public async Task Should_be_comparable()
+        public void Should_be_comparable()
         {
             StringTemplate template = StringTemplate.FromParts(new StringTemplatePart[]
             {
@@ -251,7 +251,7 @@ namespace PackSite.Library.StringUnformatter.Tests
             StringTemplate otherWrongTemplate = StringTemplate.Parse("category/delete/this/{Id}/WErty");
 
             Assert.Equal(template, template);
-            
+
             Assert.NotEqual(expected: template, new object());
             Assert.NotEqual(otherTemplate, new object());
             Assert.NotEqual(otherWrongTemplate, new object());
@@ -265,8 +265,8 @@ namespace PackSite.Library.StringUnformatter.Tests
         {
             StringTemplate template = StringTemplate.Parse("category/delete/{id:X}/{number:C2}/{text}");
 
-            Guid id = Guid.NewGuid();
-            double number = 1.23;
+            Guid id = Guid.Parse("{EFAAC911-2CB3-454F-AA44-C2AD37FA7FCD}");
+            double number = 1.23433;
             string text = "avx";
 
             string formatted = template.Format(new Dictionary<string, object?>

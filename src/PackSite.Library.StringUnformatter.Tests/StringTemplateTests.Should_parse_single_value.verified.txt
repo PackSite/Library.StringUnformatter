@@ -1,0 +1,10 @@
+﻿{
+  Template: category/get-all,
+  Parts: [
+    {
+      Value: category/get-all,
+      IsParameter: false
+    }
+  ],
+  HasParameters: false
+}

@@ -29,7 +29,7 @@ namespace PackSite.Library.StringUnformatter.Tests
         }
 
         [Fact]
-        public async Task Parts_should_be_equal()
+        public void Parts_should_be_equal()
         {
             StringTemplatePart first = new("test", true);
             StringTemplatePart second = new("test", true);
@@ -39,7 +39,7 @@ namespace PackSite.Library.StringUnformatter.Tests
         }
 
         [Fact]
-        public async Task Parts_should_not_be_equal_by_value()
+        public void Parts_should_not_be_equal_by_value()
         {
             StringTemplatePart first = new("test", true);
             StringTemplatePart second = new("other-test", true);
@@ -49,7 +49,7 @@ namespace PackSite.Library.StringUnformatter.Tests
         }
 
         [Fact]
-        public async Task Parts_should_not_be_equal_by_param()
+        public void Parts_should_not_be_equal_by_param()
         {
             StringTemplatePart first = new("test", true);
             StringTemplatePart second = new("test", false);
@@ -59,7 +59,7 @@ namespace PackSite.Library.StringUnformatter.Tests
         }
 
         [Fact]
-        public async Task Parts_should_not_be_equal_by_both()
+        public void Parts_should_not_be_equal_by_both()
         {
             StringTemplatePart first = new("test", true);
             StringTemplatePart second = new("other-test", false);
@@ -69,7 +69,7 @@ namespace PackSite.Library.StringUnformatter.Tests
         }
 
         [Fact]
-        public async Task Empty_collection_should_not_be_joined()
+        public void Empty_collection_should_not_be_joined()
         {
             Action action = () =>
             {
@@ -80,7 +80,7 @@ namespace PackSite.Library.StringUnformatter.Tests
         }
 
         [Fact]
-        public async Task Parts_should_be_joined_using_enumerable()
+        public void Parts_should_be_joined_using_enumerable()
         {
             List<StringTemplatePart> list =
             [
@@ -94,7 +94,7 @@ namespace PackSite.Library.StringUnformatter.Tests
         }
 
         [Fact]
-        public async Task Parts_should_be_joined_using_enumerable_and_params_count_should_be_returned()
+        public void Parts_should_be_joined_using_enumerable_and_params_count_should_be_returned()
         {
             List<StringTemplatePart> list =
             [
@@ -109,7 +109,7 @@ namespace PackSite.Library.StringUnformatter.Tests
         }
 
         [Fact]
-        public async Task Parts_should_be_joined_using_params()
+        public void Parts_should_be_joined_using_params()
         {
             string result = StringTemplatePart.Join(new("test-param", true), new("other-Test-Value"));
 

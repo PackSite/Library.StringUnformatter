@@ -1,0 +1,12 @@
+﻿{
+  Template: {Id},
+  Parts: [
+    {
+      Value: Id,
+      IsParameter: true,
+      Parameter: Id
+    }
+  ],
+  HasParameters: true,
+  ParmetersCount: 1
+}

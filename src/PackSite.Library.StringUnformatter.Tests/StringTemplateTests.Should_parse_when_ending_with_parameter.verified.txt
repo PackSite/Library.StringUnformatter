@@ -1,0 +1,25 @@
+﻿{
+  Template: category/delete/{Id}/{Value},
+  Parts: [
+    {
+      Value: category/delete/,
+      IsParameter: false
+    },
+    {
+      Value: Id,
+      IsParameter: true,
+      Parameter: Id
+    },
+    {
+      Value: /,
+      IsParameter: false
+    },
+    {
+      Value: Value,
+      IsParameter: true,
+      Parameter: Value
+    }
+  ],
+  HasParameters: true,
+  ParmetersCount: 2
+}
