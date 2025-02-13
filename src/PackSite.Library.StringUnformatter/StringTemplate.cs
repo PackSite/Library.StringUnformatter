@@ -78,7 +78,7 @@
                 char ch = span[i];
                 if (!isOpened && ch == '{')
                 {
-                    int openingBracketCount = CountUtillChange(span, i, '{');
+                    int openingBracketCount = CountUntillChange(span, i, '{');
                     bool isEscaped = openingBracketCount % 2 == 0;
                     i += openingBracketCount - 1;
 
@@ -98,7 +98,7 @@
                 }
                 else if (!isOpened && ch == '}')
                 {
-                    int closingBracketCount = CountUtillChange(span, i, '}');
+                    int closingBracketCount = CountUntillChange(span, i, '}');
                     bool isEscaped = closingBracketCount % 2 == 0;
                     i += closingBracketCount - 1;
 
@@ -145,7 +145,7 @@
             return new StringTemplate(template, parts, parametersCount);
         }
 
-        private static int CountUtillChange(ReadOnlySpan<char> span, int startIndex, char ch)
+        private static int CountUntillChange(ReadOnlySpan<char> span, int startIndex, char ch)
         {
             int i = startIndex;
 

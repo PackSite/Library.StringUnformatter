@@ -3,6 +3,8 @@ namespace PackSite.Library.StringUnformatter.Tests
     using System;
     using System.Collections.Frozen;
     using System.Collections.Generic;
+    using System.Globalization;
+    using System.Threading;
     using System.Threading.Tasks;
     using VerifyXunit;
     using Xunit;
@@ -263,6 +265,9 @@ namespace PackSite.Library.StringUnformatter.Tests
         [Fact]
         public async Task Should_format()
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+
             StringTemplate template = StringTemplate.Parse("category/delete/{id:X}/{number:C2}/{text}");
 
             Guid id = Guid.Parse("{EFAAC911-2CB3-454F-AA44-C2AD37FA7FCD}");
