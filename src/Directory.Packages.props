@@ -23,8 +23,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageVersion Include="Verify" Version="28.13.0" />
-		<PackageVersion Include="Verify.Xunit" Version="28.13.0" />
+		<PackageVersion Include="Verify" Version="29.2.0" />
+		<PackageVersion Include="Verify.Xunit" Version="29.2.0" />
 	</ItemGroup>
 
 </Project>
